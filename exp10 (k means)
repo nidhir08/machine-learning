@@ -1,0 +1,27 @@
+//Program to demonstrate K-Means Clustering Algorithm on handwritten dataset.
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn import datasets
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+digits = datasets.load_digits()
+X = digits.data  
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+k = 10  
+kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+labels = kmeans.fit_predict(X_scaled)
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+plt.figure(figsize=(10, 6))
+for i in range(k):
+    plt.scatter(X_pca[labels == i, 0], X_pca[labels == i, 1], label=f'Cluster {i}', alpha=0.7)
+plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1],
+            color='black', marker='X', s=200, label='Centroids')
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.title("K-Means Clustering on Handwritten Digits Dataset")
+plt.legend()
+plt.grid()
+plt.show()
