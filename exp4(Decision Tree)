@@ -1,0 +1,47 @@
+//  Program to demonstrate Decision Tree – ID3 Algorithm
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+# Sample dataset
+data = {
+    'Outlook': ['Sunny', 'Sunny', 'Overcast', 'Rain', 'Rain', 'Rain', 'Overcast',
+                'Sunny', 'Sunny', 'Rain', 'Sunny', 'Overcast', 'Overcast', 'Rain'],
+    'Temperature': ['Hot', 'Hot', 'Hot', 'Mild', 'Cool', 'Cool', 'Cool',
+                    'Mild', 'Cool', 'Mild', 'Mild', 'Mild', 'Hot', 'Mild'],
+    'Humidity': ['High', 'High', 'High', 'High', 'Normal', 'Normal', 'Normal',
+                 'High', 'Normal', 'Normal', 'Normal', 'High', 'Normal', 'High'],
+    'Wind': ['Weak', 'Strong', 'Weak', 'Weak', 'Weak', 'Strong', 'Strong',
+             'Weak', 'Weak', 'Weak', 'Strong', 'Strong', 'Weak', 'Strong'],
+    'PlayTennis': ['No', 'No', 'Yes', 'Yes', 'Yes', 'No', 'Yes',
+                   'No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'No']}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Encode categorical variables
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+
+for col in df.columns:
+    df[col] = le.fit_transform(df[col])
+
+# Split into features and target
+X = df.drop('PlayTennis', axis=1)
+y = df['PlayTennis']
+
+# Create and train Decision Tree
+clf = DecisionTreeClassifier(criterion="entropy")  # Using ID3 (entropy)
+clf.fit(X, y)
+
+# Visualize the Decision Tree
+plt.figure(figsize=(16, 10), dpi=100)  # Increase figure size and resolution
+tree.plot_tree( clf, feature_names=X.columns, 
+    class_names=['No', 'Yes'], 
+    filled=True, 
+    rounded=True, 
+    fontsize=12  # Make text smaller to reduce clutter
+)
+plt.title("Decision Tree - ID3 Algorithm", fontsize=16)
+plt.show()
