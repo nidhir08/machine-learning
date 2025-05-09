@@ -1,0 +1,40 @@
+//Program to demonstrate K-medoid clustering algorithm.
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn import datasets
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from pyclustering.cluster.kmedoids import kmedoids
+from scipy.spatial.distance import cdist
+iris = datasets.load_iris()
+X = iris.data  
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+np.random.seed(42)
+initial_medoids = np.random.choice(len(X_scaled), 3, replace=False)
+kmedoids_instance = kmedoids(X_scaled, initial_medoids, data_type='distance_matrix')
+kmedoids_instance.process()
+clusters = kmedoids_instance.get_clusters()
+medoid_indices = kmedoids_instance.get_medoids()
+cluster_labels = np.zeros(len(X_scaled))
+for i, cluster in enumerate(clusters):
+    for index in cluster:
+        cluster_labels[index] = i
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+plt.figure(figsize=(8, 6))
+colors = ['red', 'green', 'blue']
+for i in range(3):
+    plt.scatter(X_pca[np.array(clusters[i]), 0], X_pca[np.array(clusters[i]), 1],
+                label=f'Cluster {i}', color=colors[i], alpha=0.7)
+plt.scatter(X_pca[medoid_indices, 0], X_pca[medoid_indices, 1],
+            color='black', marker='X', s=200, label='Medoids')
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.title("K-Medoid Clustering on Iris Dataset (pyclustering)")
+plt.legend()
+plt.grid()
+plt.show()
+
