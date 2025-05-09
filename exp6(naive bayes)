@@ -1,0 +1,57 @@
+//  Program to demonstrate Naïve- Bayes Classifier 
+# Step 1: Import Libraries
+import pandas as pd
+from sklearn.datasets import load_wine
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# Step 2: Load Wine Dataset
+wine = load_wine()
+X = wine.data
+y = wine.target
+feature_names = wine.feature_names
+target_names = wine.target_names
+
+
+# Step 3: Create DataFrame for better visualization (optional)
+df = pd.DataFrame(X, columns=feature_names)
+df['target'] = y
+
+
+# Step 4: Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# Step 5: Create and train Naïve Bayes model
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+
+# Step 6: Make predictions
+y_pred = model.predict(X_test)
+
+
+# Step 7: Evaluate the model
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=target_names))
+print("Accuracy Score:", accuracy_score(y_test, y_pred))
+
+
+# Step 8: Optional - Visualize Confusion Matrix
+plt.figure(figsize=(6,4))
+sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, cmap="Blues", xticklabels=target_names, yticklabels=target_names)
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix - Wine Classification")
+plt.show()
+
+
+
+
+
+
+
