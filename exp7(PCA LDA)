@@ -1,0 +1,38 @@
+//Program to demonstrate PCA and LDA on Iris Dataset.	
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn import datasets
+from sklearn.decomposition import PCA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+iris = datasets.load_iris()
+X = iris.data  # Features
+y = iris.target  # Target labels
+target_names = iris.target_names
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+pca = PCA(n_components=2)  # Reduce to 2D for visualization
+X_pca = pca.fit_transform(X_scaled)
+plt.figure(figsize=(8, 6))
+colors = ['red', 'green', 'blue']
+for i, target_name in enumerate(target_names):
+	plt.scatter(X_pca[y == i, 0], X_pca[y == i, 1], label=target_name, 	color=colors[i], alpha=0.7)
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.title("PCA on Iris Dataset")
+plt.legend()
+plt.grid()
+plt.show()
+lda = LDA(n_components=2)  # Reduce to 2D for visualization
+X_lda = lda.fit_transform(X, y)
+plt.figure(figsize=(8, 6))
+for i, target_name in enumerate(target_names):
+	plt.scatter(X_lda[y == i, 0], X_lda[y == i, 1], label=target_name, 	color=colors[i], alpha=0.7)
+plt.xlabel("Linear Discriminant 1")
+plt.ylabel("Linear Discriminant 2")
+plt.title("LDA on Iris Dataset")
+plt.legend()
+plt.grid()
+plt.show()
