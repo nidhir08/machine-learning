@@ -1,0 +1,29 @@
+# Import required libraries
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+import matplotlib.pyplot as plt
+# Sample dataset (Independent variable X and Dependent variable Y)
+# Example: Hours studied vs Pass (1) or Fail (0)
+X = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).reshape(-1, 1)  # Hours studied
+Y = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1])                 # 0 = Fail, 1 = Pass
+# Create a Logistic Regression model
+model = LogisticRegression()
+# Train the model
+model.fit(X, Y)
+# Predict probabilities
+probabilities = model.predict_proba(X)
+# Predict output (0 or 1)
+predictions = model.predict(X)
+# Display the coefficients
+print("Coefficient (b1):", model.coef_[0][0])
+print("Intercept (b0):", model.intercept_[0])
+# Display predictions
+print("Predicted classes:", predictions)
+# Plotting
+plt.scatter(X, Y, color='blue', label='Actual Data')
+plt.plot(X, probabilities[:, 1], color='red', label='Logistic Regression Curve')
+plt.xlabel('Hours Studied')
+plt.ylabel('Pass (1) / Fail (0)')
+plt.title('Logistic Regression Example')
+plt.legend()
+plt.show()
